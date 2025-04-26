@@ -1,7 +1,7 @@
 import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 
 @Entity()
-export class Article {
+export class Articles {
   @PrimaryKey({ autoincrement: true })
   id: number;
 

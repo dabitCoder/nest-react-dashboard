@@ -1,9 +1,9 @@
 import type { EntityManager } from '@mikro-orm/core';
 import { Seeder } from '@mikro-orm/seeder';
-import { ArticleFactory } from '../factories/ArticleFactory';
+import { ArticlesFactory } from '../factories/ArticlesFactory';
 
 export class ArticlesSeeder extends Seeder {
   async run(em: EntityManager): Promise<void> {
-    await new ArticleFactory(em).create(50);
+    await new ArticlesFactory(em).create(50);
   }
 }

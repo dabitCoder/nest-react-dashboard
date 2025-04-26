@@ -1,11 +1,11 @@
 import { Factory } from '@mikro-orm/seeder';
 import { faker } from '@faker-js/faker';
-import { Article } from '../../entities/articles.entity';
+import { Articles } from '../../articles/entities/articles.entity';
 
-export class ArticleFactory extends Factory<Article> {
-  model = Article;
+export class ArticlesFactory extends Factory<Articles> {
+  model = Articles;
 
-  definition(): Partial<Article> {
+  definition(): Partial<Articles> {
     return {
       title: faker.lorem.sentence(),
       content: faker.lorem.paragraphs(3, '\n\n'),

@@ -6,6 +6,7 @@ import { MikroORM } from '@mikro-orm/mariadb';
 import { ArticlesFactory } from '../database/factories/ArticlesFactory';
 import { testingDatabaseConfig } from '../mikro-orm.testing.config';
 import { InternalServerErrorException } from '@nestjs/common';
+import { FindArticlesDto } from './dto/find-articles.dto';
 
 describe('ArticlesService', () => {
   let service: ArticlesService;
@@ -69,5 +70,40 @@ describe('ArticlesService', () => {
 
       await expect(service.findAll()).rejects.toThrow();
     });
+
+    describe('filters', () => {
+      beforeEach(async () => {
+        await new ArticlesFactory(orm.em).create(5, {
+          author: 'Testing author',
+        });
+        await new ArticlesFactory(orm.em).create(10, { author: 'John Doe' });
+      });
+
+      it('should filter articles by author', async () => {
+        const dto: FindArticlesDto = {
+          author: 'Testing author',
+        };
+
+        const actual = await service.findAll(dto);
+        expect(actual.length).toBe(5);
+
+        actual.forEach((article) => {
+          expect(article.author).not.toBeNull();
+          expect(article.author).toEqual(dto.author);
+        });
+      });
+
+      it('should return an empty array if authors do not exists', async () => {
+        const dto: FindArticlesDto = {
+          author: 'Hello Reviewers',
+        };
+
+        const actual = await service.findAll(dto);
+        expect(actual.length).toBe(0);
+        expect(actual).toEqual([]);
+      });
+    });
+
+    describe('sorting', () => {});
   });
 });

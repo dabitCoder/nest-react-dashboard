@@ -3,7 +3,7 @@ import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 @Entity()
 export class Articles {
   @PrimaryKey({ autoincrement: true })
-  id: number;
+  id?: number;
 
   @Property()
   title: string;

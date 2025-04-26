@@ -13,8 +13,6 @@ export class ArticlesFactory extends Factory<Articles> {
       views: faker.number.int({ min: 0, max: 500 }),
       shares: faker.number.int({ min: 0, max: 200 }),
       summary: faker.lorem.sentences(1),
-      createdAt: faker.date.past(),
-      updatedAt: faker.date.recent(),
     };
   }
 }

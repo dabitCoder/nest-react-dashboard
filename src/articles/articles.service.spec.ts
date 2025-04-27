@@ -6,7 +6,8 @@ import { MikroORM } from '@mikro-orm/mariadb';
 import { ArticlesFactory } from '../database/factories/ArticlesFactory';
 import { testingDatabaseConfig } from '../mikro-orm.testing.config';
 import { InternalServerErrorException } from '@nestjs/common';
-import { FindArticlesDto } from './dto/find-articles.dto';
+import { FindArticlesDto, SortBy } from './dto/find-articles.dto';
+import { faker } from '@faker-js/faker';
 
 describe('ArticlesService', () => {
   let service: ArticlesService;
@@ -88,12 +89,11 @@ describe('ArticlesService', () => {
         expect(actual.length).toBe(5);
 
         actual.forEach((article) => {
-          expect(article.author).not.toBeNull();
           expect(article.author).toEqual(dto.author);
         });
       });
 
-      it('should return an empty array if authors do not exists', async () => {
+      it('should return an empty array if authors do not have articles', async () => {
         const dto: FindArticlesDto = {
           author: 'Hello Reviewers',
         };
@@ -104,6 +104,166 @@ describe('ArticlesService', () => {
       });
     });
 
-    describe('sorting', () => {});
+    describe('sorting', () => {
+      it('should be able to sort article views in ascending order', async () => {
+        await new ArticlesFactory(orm.em).create(5, {
+          views: 5,
+        });
+
+        await new ArticlesFactory(orm.em).create(5, {
+          views: 10,
+        });
+
+        const dto: FindArticlesDto = {
+          sortBy: SortBy.VIEWS,
+          sortOrder: 'DESC',
+        };
+
+        const actual = await service.findAll(dto);
+
+        expect(actual.length).toBe(10);
+        expect(actual[0].views).toEqual(10);
+        expect(actual[actual.length - 1].views).toEqual(5);
+      });
+
+      it('should be able to sort article views in descending order', async () => {
+        await new ArticlesFactory(orm.em).create(5, {
+          views: 10,
+        });
+
+        await new ArticlesFactory(orm.em).create(5, {
+          views: 1,
+        });
+
+        const dto: FindArticlesDto = {
+          sortBy: SortBy.VIEWS,
+          sortOrder: 'ASC',
+        };
+
+        const actual = await service.findAll(dto);
+
+        expect(actual.length).toBe(10);
+        expect(actual[0].views).toEqual(1);
+        expect(actual[actual.length - 1].views).toEqual(10);
+      });
+
+      it('should be able to sort articles by shares in ascending order', async () => {
+        await new ArticlesFactory(orm.em).create(5, {
+          shares: 5,
+        });
+
+        await new ArticlesFactory(orm.em).create(5, {
+          shares: 10,
+        });
+
+        const dto: FindArticlesDto = {
+          sortBy: SortBy.SHARES,
+          sortOrder: 'DESC',
+        };
+
+        const actual = await service.findAll(dto);
+
+        expect(actual.length).toBe(10);
+        expect(actual[0].shares).toEqual(10);
+        expect(actual[actual.length - 1].shares).toEqual(5);
+      });
+
+      it('should be able to sort articles by shares in descending order', async () => {
+        await new ArticlesFactory(orm.em).create(5, {
+          shares: 10,
+        });
+
+        await new ArticlesFactory(orm.em).create(5, {
+          shares: 1,
+        });
+
+        const dto: FindArticlesDto = {
+          sortBy: SortBy.SHARES,
+          sortOrder: 'ASC',
+        };
+
+        const actual = await service.findAll(dto);
+
+        expect(actual.length).toBe(10);
+        expect(actual[0].shares).toEqual(1);
+        expect(actual[actual.length - 1].shares).toEqual(10);
+      });
+
+      it('should handle default sorting if not provided', async () => {
+        await new ArticlesFactory(orm.em).create(5, {
+          shares: 10,
+        });
+
+        await new ArticlesFactory(orm.em).create(5, {
+          shares: 1,
+        });
+
+        const dto: FindArticlesDto = {
+          sortBy: SortBy.SHARES,
+        };
+
+        const actual = await service.findAll(dto);
+
+        expect(actual.length).toBe(10);
+        expect(actual[0].shares).toEqual(1);
+        expect(actual[actual.length - 1].shares).toEqual(10);
+      });
+    });
+
+    describe('search', () => {
+      it('should be able to search by title', async () => {
+        await new ArticlesFactory(orm.em).create(5, {
+          title: 'testing',
+        });
+
+        await new ArticlesFactory(orm.em).create(1, {
+          title: 'hello reviewer',
+        });
+
+        const dto: FindArticlesDto = {
+          searchTerm: 'testing',
+        };
+
+        const actual = await service.findAll(dto);
+        expect(actual.length).toBe(5);
+
+        actual.forEach((item) => {
+          expect(item.title).toEqual('testing');
+        });
+      });
+
+      it('should be able to search by content', async () => {
+        await new ArticlesFactory(orm.em).create(1, {
+          content:
+            "Life before Death, Strength Before Weakness, Journey before Destination',",
+        });
+
+        await new ArticlesFactory(orm.em).create(3, {
+          content: faker.string.fromCharacters('abcdefghi'),
+        });
+
+        const dto: FindArticlesDto = {
+          searchTerm: 'before',
+        };
+
+        const actual = await service.findAll(dto);
+        expect(actual.length).toBe(1);
+      });
+
+      it('should return an empty array if articles do not match with searchTerm', async () => {
+        await new ArticlesFactory(orm.em).create(1, {
+          title: 'testing',
+          content:
+            'I write these words in steel, for anything not set in metal cannot be trusted',
+        });
+
+        const dto: FindArticlesDto = {
+          searchTerm: 'hello good morning',
+        };
+
+        const actual = await service.findAll(dto);
+        expect(actual.length).toBe(0);
+      });
+    });
   });
 });

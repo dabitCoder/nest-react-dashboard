@@ -1,6 +1,6 @@
 import { IsOptional, IsString, IsEnum } from 'class-validator';
 
-enum SortBy {
+export enum SortBy {
   VIEWS = 'views',
   SHARES = 'shares',
 }
@@ -17,4 +17,8 @@ export class FindArticlesDto {
   @IsOptional()
   @IsEnum(['ASC', 'DESC'])
   sortOrder?: 'ASC' | 'DESC' = 'ASC';
+
+  @IsOptional()
+  @IsString()
+  searchTerm?: string;
 }

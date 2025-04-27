@@ -15,6 +15,7 @@ export class ArticlesService {
   findAll(params: FindArticlesDto = {}): Promise<Articles[]> {
     if (params) {
       const { author, sortBy, sortOrder } = params;
+
       const where: any = {};
       const orderBy: any = {};
 
@@ -23,7 +24,7 @@ export class ArticlesService {
       }
 
       if (sortBy) {
-        orderBy.sortBy = sortOrder;
+        orderBy[sortBy] = sortOrder ?? 'ASC';
       }
 
       return this.repository.findAll({ where, orderBy });

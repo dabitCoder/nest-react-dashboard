@@ -1,12 +1,12 @@
 const Header = () => {
 	return (
-		<header className="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md">
+		<header className="bg-gradient-to-r text-gray-500 border-b border-neutral-200/75 bg-white text-neutral-900">
 			<div className="container mx-auto px-4 py-6 flex items-center justify-between max-w-7xl">
 				<div className="flex items-center space-x-2">
-					<h1 className="text-2xl font-bold">Dashboard</h1>
+					<h1 className="text-2xl font-bold">Vitenest</h1>
 				</div>
 				<div>
-					<p className="text-sm text-white/80">Analyze your content performance</p>
+					<p className="text-sm text-neutral-90">Analyze your content performance</p>
 				</div>
 			</div>
 		</header>

@@ -4,7 +4,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Articles } from './entities/articles.entity';
 import { MikroORM } from '@mikro-orm/mariadb';
 import { ArticlesFactory } from '../database/factories/ArticlesFactory';
-import { testingDatabaseConfig } from '../mikro-orm.testing.config';
+import testingDatabaseConfig from '../mikro-orm.testing.config';
 import {
   InternalServerErrorException,
   NotFoundException,

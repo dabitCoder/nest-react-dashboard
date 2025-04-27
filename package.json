@@ -2,7 +2,10 @@
   "name": "fullstack-app",
   "packageManager": "yarn@4.6.0",
   "scripts": {
-    "dev": "concurrently \"yarn workspace frontend dev\" \"yarn workspace backend start:dev\""
+    "setup:environment": "yarn workspace backend migrate && yarn workspace backend seeder:run",
+    "dev": "concurrently \"yarn workspace frontend dev\" \"yarn workspace backend start:dev\"",
+    "build": "yarn workspace backend build && yarn workspace frontend build",
+    "test": "yarn workspace backend test && yarn workspace backend test:e2e && yarn workspaces frontend test"
   },
   "workspaces": [
     "frontend",

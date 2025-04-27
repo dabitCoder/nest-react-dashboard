@@ -26,5 +26,5 @@ export class FindArticlesDto {
   page?: number = 1;
 
   @IsOptional()
-  limit?: number = 10;
+  limit?: number = 25;
 }

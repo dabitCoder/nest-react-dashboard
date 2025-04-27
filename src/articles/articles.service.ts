@@ -40,14 +40,14 @@ export class ArticlesService {
     return where;
   }
 
-  async createSummary(params: CreateSummaryDto): Promise<string> {
+  async createSummary(params: CreateSummaryDto): Promise<{ summary: string }> {
     const article = await this.repository.findOne({ id: params.articleId });
 
     if (!article) {
       throw new NotFoundException('Article not found');
     }
 
-    return article.summary;
+    return { summary: article.summary };
   }
 
   private buildSearchQuery(

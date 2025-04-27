@@ -391,7 +391,7 @@ describe('ArticlesService', () => {
       };
 
       const actual = await service.createSummary(dto);
-      expect(actual).toEqual('testing');
+      expect(actual.summary).toEqual('testing');
     });
 
     it('should throw not found exception if article doesnt exist', async () => {

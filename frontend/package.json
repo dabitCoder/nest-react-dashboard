@@ -14,7 +14,9 @@
     "axios": "^1.9.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "tailwindcss": "^4.1.4"
+    "react-router": "^7.5.2",
+    "tailwindcss": "^4.1.4",
+    "use-debounce": "^10.0.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",

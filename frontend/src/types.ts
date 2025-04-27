@@ -15,6 +15,7 @@ export interface ArticleQueryParams {
 	sortBy?: string;
 	sortOrder?: string;
 	author?: string;
+	searchTerm?: string;
 }
 
 export interface Article {

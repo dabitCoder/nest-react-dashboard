@@ -52,8 +52,8 @@ describe('ArticlesService', () => {
 
       const actual = await service.findAll(null);
 
-      expect(actual.length).toBe(10);
-      actual.forEach((article) => {
+      expect(actual.data.length).toBe(10);
+      actual.data.forEach((article) => {
         expect(article.title).not.toBeNull();
         expect(article.content).not.toBeNull();
         expect(article.author).not.toBeNull();
@@ -65,7 +65,8 @@ describe('ArticlesService', () => {
 
     it('should return an empty array if there are no articles', async () => {
       const actual = await service.findAll();
-      expect(actual).toEqual([]);
+      expect(actual.total).toEqual(0);
+      expect(actual.data).toEqual([]);
     });
 
     it('should filter by author and sort by views descending', async () => {
@@ -90,26 +91,28 @@ describe('ArticlesService', () => {
 
       const actual = await service.findAll(dto);
 
-      expect(actual.length).toBe(5);
-      expect(actual[0].author).toBe('Brandon Sanderson');
-      expect(actual[0].views).toBe(100);
-      expect(actual[1].author).toBe('Brandon Sanderson');
-      expect(actual[1].views).toBe(100);
-      expect(actual[2].author).toBe('Brandon Sanderson');
-      expect(actual[2].views).toBe(100);
-      expect(actual[3].author).toBe('Brandon Sanderson');
-      expect(actual[3].views).toBe(50);
-      expect(actual[4].author).toBe('Brandon Sanderson');
-      expect(actual[4].views).toBe(50);
+      expect(actual.total).toBe(5);
+      expect(actual.data[0].author).toBe('Brandon Sanderson');
+      expect(actual.data[0].views).toBe(100);
+      expect(actual.data[1].author).toBe('Brandon Sanderson');
+      expect(actual.data[1].views).toBe(100);
+      expect(actual.data[2].author).toBe('Brandon Sanderson');
+      expect(actual.data[2].views).toBe(100);
+      expect(actual.data[3].author).toBe('Brandon Sanderson');
+      expect(actual.data[3].views).toBe(50);
+      expect(actual.data[4].author).toBe('Brandon Sanderson');
+      expect(actual.data[4].views).toBe(50);
 
-      for (let i = 0; i < actual.length - 1; i++) {
-        expect(actual[i].views).toBeGreaterThanOrEqual(actual[i + 1].views);
+      for (let i = 0; i < actual.data.length - 1; i++) {
+        expect(actual.data[i].views).toBeGreaterThanOrEqual(
+          actual.data[i + 1].views,
+        );
       }
     });
 
     it('should return an error if something goes wrong', async () => {
       jest
-        .spyOn(service['repository'], 'findAll')
+        .spyOn(service['repository'], 'findAndCount')
         .mockRejectedValueOnce(new InternalServerErrorException());
 
       await expect(service.findAll()).rejects.toThrow();
@@ -127,9 +130,9 @@ describe('ArticlesService', () => {
         };
 
         const actual = await service.findAll(dto);
-        expect(actual.length).toBe(5);
+        expect(actual.data.length).toBe(5);
 
-        actual.forEach((article) => {
+        actual.data.forEach((article) => {
           expect(article.author).toEqual(dto.author);
         });
       });
@@ -145,8 +148,8 @@ describe('ArticlesService', () => {
         };
 
         const actual = await service.findAll(dto);
-        expect(actual.length).toBe(0);
-        expect(actual).toEqual([]);
+        expect(actual.total).toBe(0);
+        expect(actual.data).toEqual([]);
       });
     });
 
@@ -167,9 +170,9 @@ describe('ArticlesService', () => {
 
         const actual = await service.findAll(dto);
 
-        expect(actual.length).toBe(10);
-        expect(actual[0].views).toEqual(10);
-        expect(actual[actual.length - 1].views).toEqual(5);
+        expect(actual.data.length).toBe(10);
+        expect(actual.data[0].views).toEqual(10);
+        expect(actual.data[actual.data.length - 1].views).toEqual(5);
       });
 
       it('should be able to sort article views in descending order', async () => {
@@ -188,9 +191,9 @@ describe('ArticlesService', () => {
 
         const actual = await service.findAll(dto);
 
-        expect(actual.length).toBe(10);
-        expect(actual[0].views).toEqual(1);
-        expect(actual[actual.length - 1].views).toEqual(10);
+        expect(actual.data.length).toBe(10);
+        expect(actual.data[0].views).toEqual(1);
+        expect(actual.data[actual.data.length - 1].views).toEqual(10);
       });
 
       it('should be able to sort articles by shares in ascending order', async () => {
@@ -209,9 +212,9 @@ describe('ArticlesService', () => {
 
         const actual = await service.findAll(dto);
 
-        expect(actual.length).toBe(10);
-        expect(actual[0].shares).toEqual(10);
-        expect(actual[actual.length - 1].shares).toEqual(5);
+        expect(actual.data.length).toBe(10);
+        expect(actual.data[0].shares).toEqual(10);
+        expect(actual.data[actual.data.length - 1].shares).toEqual(5);
       });
 
       it('should be able to sort articles by shares in descending order', async () => {
@@ -230,9 +233,9 @@ describe('ArticlesService', () => {
 
         const actual = await service.findAll(dto);
 
-        expect(actual.length).toBe(10);
-        expect(actual[0].shares).toEqual(1);
-        expect(actual[actual.length - 1].shares).toEqual(10);
+        expect(actual.data.length).toBe(10);
+        expect(actual.data[0].shares).toEqual(1);
+        expect(actual.data[actual.data.length - 1].shares).toEqual(10);
       });
 
       it('should handle default sorting if not provided', async () => {
@@ -250,9 +253,9 @@ describe('ArticlesService', () => {
 
         const actual = await service.findAll(dto);
 
-        expect(actual.length).toBe(10);
-        expect(actual[0].shares).toEqual(1);
-        expect(actual[actual.length - 1].shares).toEqual(10);
+        expect(actual.data.length).toBe(10);
+        expect(actual.data[0].shares).toEqual(1);
+        expect(actual.data[actual.data.length - 1].shares).toEqual(10);
       });
     });
 
@@ -272,9 +275,9 @@ describe('ArticlesService', () => {
 
         const actual = await service.findAll(dto);
 
-        expect(actual.length).toBe(5);
+        expect(actual.data.length).toBe(5);
 
-        actual.forEach((item) => {
+        actual.data.forEach((item) => {
           expect(item.title).toEqual('testing');
         });
       });
@@ -294,7 +297,7 @@ describe('ArticlesService', () => {
         };
 
         const actual = await service.findAll(dto);
-        expect(actual.length).toBe(1);
+        expect(actual.data.length).toBe(1);
       });
 
       it('should return an empty array if articles do not match with searchTerm', async () => {
@@ -309,7 +312,7 @@ describe('ArticlesService', () => {
         };
 
         const actual = await service.findAll(dto);
-        expect(actual.length).toBe(0);
+        expect(actual.data.length).toBe(0);
       });
 
       it('should be able to search by title with partial match', async () => {
@@ -323,8 +326,8 @@ describe('ArticlesService', () => {
         const dto: FindArticlesDto = { searchTerm: 'test' };
         const actual = await service.findAll(dto);
 
-        expect(actual.length).toBe(1);
-        expect(actual[0].title).toBe('testing Article');
+        expect(actual.data.length).toBe(1);
+        expect(actual.data[0].title).toBe('testing Article');
       });
 
       it('should be able to search by content with partial match', async () => {
@@ -338,8 +341,41 @@ describe('ArticlesService', () => {
         const dto: FindArticlesDto = { searchTerm: 'testing' };
         const actual = await service.findAll(dto);
 
-        expect(actual.length).toBe(1);
-        expect(actual[0].content).toBe('this is the Testing Content');
+        expect(actual.data.length).toBe(1);
+        expect(actual.data[0].content).toBe('this is the Testing Content');
+      });
+    });
+
+    describe('pagination', () => {
+      it('should return the first page with the correct number of items', async () => {
+        const articles = await new ArticlesFactory(orm.em).create(25);
+        const dto: FindArticlesDto = { page: 1, limit: 10 };
+        const actual = await service.findAll(dto);
+        expect(actual.data.length).toBe(10);
+        expect(actual.data[0].id).toBe(articles[0].id);
+        expect(actual.data[9].id).toBe(articles[9].id);
+      });
+
+      it('should return the second page with the correct number of items', async () => {
+        const articles = await new ArticlesFactory(orm.em).create(25);
+        const dto: FindArticlesDto = { page: 2, limit: 10 };
+        const actual = await service.findAll(dto);
+        expect(actual.data.length).toBe(10);
+        expect(actual.data[0].id).toBe(articles[10].id);
+        expect(actual.data[9].id).toBe(articles[19].id);
+      });
+
+      it('should return the last page with the correct number of items', async () => {
+        await new ArticlesFactory(orm.em).create(25);
+        const dto: FindArticlesDto = { page: 3, limit: 10 };
+        const actual = await service.findAll(dto);
+        expect(actual.data.length).toBe(5);
+      });
+
+      it('should work with default pagination params', async () => {
+        await new ArticlesFactory(orm.em).create(15);
+        const actual = await service.findAll();
+        expect(actual.data.length).toBe(15);
       });
     });
   });

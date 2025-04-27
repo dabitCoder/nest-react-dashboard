@@ -21,4 +21,10 @@ export class FindArticlesDto {
   @IsOptional()
   @IsString()
   searchTerm?: string;
+
+  @IsOptional()
+  page?: number = 1;
+
+  @IsOptional()
+  limit?: number = 10;
 }

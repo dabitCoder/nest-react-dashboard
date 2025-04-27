@@ -2,9 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Articles } from './entities/articles.entity';
 
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { EntityRepository, FilterQuery } from '@mikro-orm/mariadb';
+import { EntityRepository, FilterQuery, FindOptions } from '@mikro-orm/mariadb';
 import { FindArticlesDto } from './dto/find-articles.dto';
 import { CreateSummaryDto } from './dto/create-summary.dto';
+import { FindAllResponse } from './types';
 
 @Injectable()
 export class ArticlesService {
@@ -13,11 +14,21 @@ export class ArticlesService {
     private readonly repository: EntityRepository<Articles>,
   ) {}
 
-  findAll(params: FindArticlesDto = {}): Promise<Articles[]> {
+  async findAll(params: FindArticlesDto = {}): Promise<FindAllResponse> {
     const where: FilterQuery<Articles> = this.buildWhereQuery(params);
     const orderBy = this.buildSortingQuery(params);
+    const options: FindOptions<Articles> = {
+      orderBy,
+    };
 
-    return this.repository.findAll({ where, orderBy });
+    if (params?.page && params?.limit) {
+      options.limit = params.limit;
+      options.offset = (params.page - 1) * params.limit;
+    }
+
+    const [data, total] = await this.repository.findAndCount(where, options);
+
+    return { data, total };
   }
 
   private buildWhereQuery(params: FindArticlesDto = {}): FilterQuery<Articles> {

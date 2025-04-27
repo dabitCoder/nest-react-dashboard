@@ -1,7 +1,8 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { Articles } from './entities/articles.entity';
 import { FindArticlesDto } from './dto/find-articles.dto';
+import { CreateSummaryDto } from './dto/create-summary.dto';
 
 @Controller('articles')
 export class ArticlesController {
@@ -10,5 +11,15 @@ export class ArticlesController {
   @Get()
   findAll(params: FindArticlesDto): Promise<Articles[]> {
     return this.articlesService.findAll(params);
+  }
+
+  /**
+   * I choose post because in a "real world scenario" this will include some processing
+   * of the article (title or content). For a test like this a GET is more than enough
+   * but I think is good to show how I would do this on o production environment
+   */
+  @Post('/summary')
+  createSummary(@Body() params: CreateSummaryDto): Promise<string> {
+    return this.articlesService.createSummary(params);
   }
 }

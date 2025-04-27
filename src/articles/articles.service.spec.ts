@@ -5,9 +5,13 @@ import { Articles } from './entities/articles.entity';
 import { MikroORM } from '@mikro-orm/mariadb';
 import { ArticlesFactory } from '../database/factories/ArticlesFactory';
 import { testingDatabaseConfig } from '../mikro-orm.testing.config';
-import { InternalServerErrorException } from '@nestjs/common';
+import {
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { FindArticlesDto, SortBy } from './dto/find-articles.dto';
 import { faker } from '@faker-js/faker';
+import { CreateSummaryDto } from './dto/create-summary.dto';
 
 describe('ArticlesService', () => {
   let service: ArticlesService;
@@ -64,6 +68,45 @@ describe('ArticlesService', () => {
       expect(actual).toEqual([]);
     });
 
+    it('should filter by author and sort by views descending', async () => {
+      await new ArticlesFactory(orm.em).create(3, {
+        author: 'Brandon Sanderson',
+        views: 100,
+      });
+      await new ArticlesFactory(orm.em).create(2, {
+        author: 'Brandon Sanderson',
+        views: 50,
+      });
+      await new ArticlesFactory(orm.em).create(5, {
+        author: 'Another Author',
+        views: 200,
+      });
+
+      const dto: FindArticlesDto = {
+        author: 'Brandon Sanderson',
+        sortBy: SortBy.VIEWS,
+        sortOrder: 'DESC',
+      };
+
+      const actual = await service.findAll(dto);
+
+      expect(actual.length).toBe(5);
+      expect(actual[0].author).toBe('Brandon Sanderson');
+      expect(actual[0].views).toBe(100);
+      expect(actual[1].author).toBe('Brandon Sanderson');
+      expect(actual[1].views).toBe(100);
+      expect(actual[2].author).toBe('Brandon Sanderson');
+      expect(actual[2].views).toBe(100);
+      expect(actual[3].author).toBe('Brandon Sanderson');
+      expect(actual[3].views).toBe(50);
+      expect(actual[4].author).toBe('Brandon Sanderson');
+      expect(actual[4].views).toBe(50);
+
+      for (let i = 0; i < actual.length - 1; i++) {
+        expect(actual[i].views).toBeGreaterThanOrEqual(actual[i + 1].views);
+      }
+    });
+
     it('should return an error if something goes wrong', async () => {
       jest
         .spyOn(service['repository'], 'findAll')
@@ -73,14 +116,12 @@ describe('ArticlesService', () => {
     });
 
     describe('filters', () => {
-      beforeEach(async () => {
+      it('should filter articles by author', async () => {
         await new ArticlesFactory(orm.em).create(5, {
           author: 'Testing author',
         });
         await new ArticlesFactory(orm.em).create(10, { author: 'John Doe' });
-      });
 
-      it('should filter articles by author', async () => {
         const dto: FindArticlesDto = {
           author: 'Testing author',
         };
@@ -94,6 +135,11 @@ describe('ArticlesService', () => {
       });
 
       it('should return an empty array if authors do not have articles', async () => {
+        await new ArticlesFactory(orm.em).create(5, {
+          author: 'Testing author',
+        });
+        await new ArticlesFactory(orm.em).create(10, { author: 'John Doe' });
+
         const dto: FindArticlesDto = {
           author: 'Hello Reviewers',
         };
@@ -225,6 +271,7 @@ describe('ArticlesService', () => {
         };
 
         const actual = await service.findAll(dto);
+
         expect(actual.length).toBe(5);
 
         actual.forEach((item) => {
@@ -264,6 +311,57 @@ describe('ArticlesService', () => {
         const actual = await service.findAll(dto);
         expect(actual.length).toBe(0);
       });
+
+      it('should be able to search by title with partial match', async () => {
+        await new ArticlesFactory(orm.em).create(1, {
+          title: 'testing Article',
+        });
+        await new ArticlesFactory(orm.em).create(1, {
+          title: 'another Article',
+        });
+
+        const dto: FindArticlesDto = { searchTerm: 'test' };
+        const actual = await service.findAll(dto);
+
+        expect(actual.length).toBe(1);
+        expect(actual[0].title).toBe('testing Article');
+      });
+
+      it('should be able to search by content with partial match', async () => {
+        await new ArticlesFactory(orm.em).create(1, {
+          content: 'this is the Testing Content',
+        });
+        await new ArticlesFactory(orm.em).create(1, {
+          content: 'some Other Content',
+        });
+
+        const dto: FindArticlesDto = { searchTerm: 'testing' };
+        const actual = await service.findAll(dto);
+
+        expect(actual.length).toBe(1);
+        expect(actual[0].content).toBe('this is the Testing Content');
+      });
+    });
+  });
+
+  describe('findOneSummary', () => {
+    it('should return the summary of a given article', async () => {
+      const article = await new ArticlesFactory(orm.em).createOne({
+        summary: 'testing',
+      });
+
+      const dto: CreateSummaryDto = {
+        articleId: article.id,
+      };
+
+      const actual = await service.createSummary(dto);
+      expect(actual).toEqual('testing');
+    });
+
+    it('should throw not found exception if article doesnt exist', async () => {
+      await expect(service.createSummary({ articleId: 9999 })).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 });

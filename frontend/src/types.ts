@@ -34,3 +34,6 @@ export interface ArticlesResponse {
 	data: Article[];
 	total: number;
 }
+
+export type SortBy = 'views' | 'shares' | ''
+export type SortOrder = 'ASC' | 'DESC' | ''

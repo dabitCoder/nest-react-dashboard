@@ -1,8 +1,8 @@
 import { ChangeEvent } from "react";
 
 interface Props {
-  searchTerm: string;
-  handleSearchChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  searchTerm?: string;
+  handleSearchChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
 const SearchInput = ({ searchTerm, handleSearchChange }: Props) => {

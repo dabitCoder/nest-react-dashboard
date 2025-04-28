@@ -1,4 +1,4 @@
-import React from "react";
+import React, {FC} from "react";
 import { Article } from "../../types";
 import ArticleCard from "./ArticleCard";
 import Spinner from "../common/Spinner";
@@ -8,9 +8,9 @@ interface ArticlesListProps {
   isPending: boolean;
 }
 
-const ArticlesList: React.FC<ArticlesListProps> = ({ articles, isPending }) => {
+const ArticlesList: FC<ArticlesListProps> = ({ articles, isPending }) => {
   return (
-    <div className="flex flex-col md:grid md:grid-cols-3 gap-2 md:gap-6 mb-4 ">
+    <div className="flex flex-col md:grid md:grid-cols-3 gap-2 md:gap-6 mb-6">
       {isPending ? (
         <Spinner />
       ) : articles.length ? (

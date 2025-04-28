@@ -1,6 +1,6 @@
 import { Article } from "../../types.ts";
 import { FC, ReactNode } from "react";
-import {useNavigate} from "react-router";
+import { useNavigate } from "react-router";
 
 interface ArticleCardProps {
   article: Article;
@@ -12,6 +12,7 @@ const ArticleCard: FC<ArticleCardProps> = ({ article }): ReactNode => {
 
   return (
     <div
+      aria-label={`article-card-${id}`}
       key={id}
       className="bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-300 transform hover:-translate-y-1 hover:shadow-md flex flex-col h-full"
     >
@@ -58,7 +59,10 @@ const ArticleCard: FC<ArticleCardProps> = ({ article }): ReactNode => {
         </span>
       </div>
       <div className="p-5 flex-grow">
-        <h3 className="text-lg font-semibold text-gray-800 mb-2 line-clamp-1">
+        <h3
+          aria-label={`article-card-title-${id}`}
+          className="text-lg font-semibold text-gray-800 mb-2 line-clamp-1"
+        >
           {title}
         </h3>
         <p className="text-sm text-gray-500 mb-3">by {author}</p>
@@ -66,13 +70,12 @@ const ArticleCard: FC<ArticleCardProps> = ({ article }): ReactNode => {
       </div>
 
       <div className="p-4">
-        <button className="w-full flex items-center justify-center bg-blue-400 text-white h-10 rounded-md hover:bg-blue-600 transition-colors cursor-pointer">
-          <span
-            className="text-sm font-medium"
-            onClick={() => navigate(`/${id}/summary`)}
-          >
-            Summarize
-          </span>
+        <button
+          onClick={() => navigate(`/${id}/summary`)}
+          aria-label="summarize-button"
+          className="w-full flex items-center justify-center bg-blue-400 text-white h-10 rounded-md hover:bg-blue-600 transition-colors cursor-pointer"
+        >
+          <span className="text-sm font-medium">Summarize</span>
         </button>
       </div>
     </div>

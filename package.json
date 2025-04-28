@@ -12,7 +12,13 @@
     "backend"
   ],
   "devDependencies": {
-    "concurrently": "^9.1.2"
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "concurrently": "^9.1.2",
+    "jest-environment-jsdom": "^29.7.0"
   },
   "dependencies": {
     "corepack": "^0.32.0"

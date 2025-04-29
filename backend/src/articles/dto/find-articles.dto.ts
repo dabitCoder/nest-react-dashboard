@@ -8,7 +8,7 @@ export enum SortBy {
 export class FindArticlesDto {
   @IsOptional()
   @IsString()
-  author?: string;
+  authorId?: string;
 
   @IsOptional()
   @IsEnum(SortBy)

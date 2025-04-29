@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { FindArticlesDto } from './dto/find-articles.dto';
 import { CreateSummaryDto } from './dto/create-summary.dto';
-import { FindAllResponse } from './types';
+import { FindAllResponse, StatsResponse } from './types';
 
 @Controller('articles')
 export class ArticlesController {
@@ -23,5 +23,10 @@ export class ArticlesController {
     @Body() params: CreateSummaryDto,
   ): Promise<{ summary: string }> {
     return this.articlesService.createSummary(params);
+  }
+
+  @Get('/stats')
+  async findMostViewedAndSharedArticles(): Promise<StatsResponse> {
+    return this.articlesService.findMostViewedAndSharedArticles();
   }
 }

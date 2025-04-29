@@ -1,4 +1,5 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
+import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
+import { Authors } from '../../authors/entities/authors.entity';
 
 @Entity()
 export class Articles {
@@ -11,8 +12,11 @@ export class Articles {
   @Property({ type: 'text' })
   content: string;
 
-  @Property()
-  author: string;
+  @ManyToOne({
+    entity: () => Authors,
+    index: 'articles_author_id_foreign',
+  })
+  author: Authors;
 
   @Property()
   views: number;
@@ -32,7 +36,7 @@ export class Articles {
   constructor(
     title: string,
     content: string,
-    author: string,
+    author: Authors,
     views: number,
     shares: number,
   ) {

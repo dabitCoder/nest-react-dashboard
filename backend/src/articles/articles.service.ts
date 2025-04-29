@@ -5,7 +5,7 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository, FilterQuery, FindOptions } from '@mikro-orm/mariadb';
 import { FindArticlesDto } from './dto/find-articles.dto';
 import { CreateSummaryDto } from './dto/create-summary.dto';
-import { FindAllResponse } from './types';
+import { FindAllResponse, StatsResponse } from './types';
 
 @Injectable()
 export class ArticlesService {
@@ -26,9 +26,27 @@ export class ArticlesService {
       options.offset = (params.page - 1) * params.limit;
     }
 
-    const [data, total] = await this.repository.findAndCount(where, options);
+    const [data, total] = await this.repository.findAndCount(where, {
+      ...options,
+      populate: ['author'],
+    });
 
     return { data, total };
+  }
+
+  async findMostViewedAndSharedArticles(): Promise<StatsResponse> {
+    const [mostViewed, mostShared] = await Promise.all([
+      this.repository.find(
+        {},
+        { orderBy: { views: 'DESC' }, limit: 1, populate: ['author'] },
+      ),
+      this.repository.find(
+        {},
+        { orderBy: { shares: 'DESC' }, limit: 1, populate: ['author'] },
+      ),
+    ]);
+
+    return { mostViewed, mostShared };
   }
 
   private buildWhereQuery(params: FindArticlesDto = {}): FilterQuery<Articles> {
@@ -41,7 +59,10 @@ export class ArticlesService {
   }
 
   async createSummary(params: CreateSummaryDto): Promise<{ summary: string }> {
-    const article = await this.repository.findOne({ id: params.articleId });
+    const article = await this.repository.findOne(
+      { id: params.articleId },
+      { populate: ['author'] },
+    );
 
     if (!article) {
       throw new NotFoundException('Article not found');
@@ -80,8 +101,8 @@ export class ArticlesService {
     params: FindArticlesDto,
     where: FilterQuery<any>,
   ): any {
-    if (params?.author) {
-      where.author = params.author.toLowerCase();
+    if (params?.authorId) {
+      where['author.id'] = params.authorId;
     }
   }
 }

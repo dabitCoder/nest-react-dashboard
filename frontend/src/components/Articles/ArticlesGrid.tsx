@@ -1,30 +1,29 @@
-import { useRef } from "react";
-import ArticlesHeader from "./ArticlesHeader";
-import ArticlesList from "./ArticlesList.tsx";
+import { FC, ReactElement, useRef } from "react";
 import ErrorMessage from "../common/ErrorMessage";
 import Pagination from "../common/Pagination";
-import useArticleQueryParams from "../../hooks/useArticlesQueryParams";
-import useFetchArticles from "../../hooks/useFetchArticles";
+import ArticleCard from "./ArticleCard.tsx";
+import {Article, ArticlesResponse} from "../../types.ts";
 
-const pageSizes = [5, 10, 20, 50];
+interface Props {
+  isPending: boolean;
+  error: Error | null;
+  updatePage: (page: number) => void;
+  articles: ArticlesResponse;
+  limit: number | undefined;
+  page: number | undefined;
+}
 
-const ArticlesGrid = () => {
-  const {
-    queryParams,
-    searchTerm,
-    sortBy,
-    sortOrder,
-    updateSearchTerm,
-    updateSortBy,
-    updateSortOrder,
-    updatePage,
-    updateLimit,
-  } = useArticleQueryParams();
-
-  const { articles, isPending, error } = useFetchArticles(queryParams);
+const ArticlesGrid: FC<Props> = ({
+  isPending,
+  updatePage,
+  articles,
+  limit,
+  error,
+  page
+}): ReactElement => {
   const contentRef = useRef<HTMLDivElement>(null);
 
-  const totalPages = Math.ceil(articles.total / (queryParams.limit || 5));
+  const totalPages = Math.ceil(articles.total / (limit || 5));
 
   if (error) {
     return (
@@ -36,22 +35,22 @@ const ArticlesGrid = () => {
 
   return (
     <section className="mt-14" ref={contentRef}>
-      <ArticlesHeader
-        totalArticles={articles.total}
-        onSearchChange={updateSearchTerm}
-        searchTerm={searchTerm}
-        handleSortChange={updateSortBy}
-        sortBy={sortBy as "views" | "shares" | ""}
-        handleSortOrderChange={updateSortOrder}
-        sortOrder={sortOrder as "ASC" | "DESC" | ""}
-        onPageSizeChange={updateLimit}
-        pageSizes={pageSizes}
-        currentLimit={queryParams.limit || 5}
-      />
-      <ArticlesList articles={articles.data} isPending={isPending} />
+      <div className="flex flex-col md:grid md:grid-cols-3 gap-2 md:gap-6 mb-6">
+        {articles.data.length ? (
+          articles.data.map((article: Article) => (
+            <ArticleCard
+              article={article}
+              key={article.id}
+              isPending={isPending}
+            />
+          ))
+        ) : (
+          <p>No articles found.</p>
+        )}
+      </div>
       {articles.total > 0 && (
         <Pagination
-          currentPage={queryParams.page || 1}
+          currentPage={page || 1}
           totalPages={totalPages}
           onPageChange={updatePage}
         />

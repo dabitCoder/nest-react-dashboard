@@ -26,7 +26,9 @@ export class ArticlesController {
   }
 
   @Get('/stats')
-  async findMostViewedAndSharedArticles(): Promise<StatsResponse> {
-    return this.articlesService.findMostViewedAndSharedArticles();
+  async findMostViewedAndSharedArticles(
+    @Query() params: Partial<FindArticlesDto>,
+  ): Promise<StatsResponse> {
+    return this.articlesService.findMostViewedAndSharedArticles(params);
   }
 }

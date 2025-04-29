@@ -6,9 +6,11 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Articles } from '../src/articles/entities/articles.entity';
 import { MikroORM } from '@mikro-orm/mariadb';
 import { ArticlesFactory } from '../src/database/factories/ArticlesFactory';
-import { testingDatabaseConfig } from '../src/mikro-orm.testing.config';
+import testingDatabaseConfig from '../src/mikro-orm.testing.config';
 import { FindArticlesDto, SortBy } from '../src/articles/dto/find-articles.dto';
 import { CreateSummaryDto } from '../src/articles/dto/create-summary.dto';
+import { AuthorFactory } from '../src/database/factories/AuthorsFactory';
+import { Authors } from '../src/authors/entities/authors.entity';
 
 describe('ArticlesController (e2e)', () => {
   let app: INestApplication;
@@ -19,7 +21,6 @@ describe('ArticlesController (e2e)', () => {
       imports: [
         MikroOrmModule.forRoot({
           ...testingDatabaseConfig,
-          autoLoadEntities: true,
           allowGlobalContext: true,
         }),
         ArticlesModule,
@@ -34,10 +35,13 @@ describe('ArticlesController (e2e)', () => {
   });
 
   afterEach(async () => {
+    await orm.em.nativeDelete(Authors, {});
     await orm.em.nativeDelete(Articles, {});
   });
 
   afterAll(async () => {
+    await orm.em.nativeDelete(Authors, {});
+    await orm.em.nativeDelete(Articles, {});
     await orm.close();
     await app.close();
   });
@@ -46,9 +50,10 @@ describe('ArticlesController (e2e)', () => {
     it('should return an array of articles', async () => {
       await new ArticlesFactory(orm.em).create(10);
 
-      const response = await request(app.getHttpServer()).get('/articles');
+      const response = await request(app.getHttpServer())
+        .get('/articles')
+        .expect(200);
 
-      expect(response.status).toBe(200);
       expect(response.body.data.length).toBe(10);
       expect(response.body.data[0]).toHaveProperty('id');
       expect(response.body.data[0]).toHaveProperty('title');
@@ -62,9 +67,9 @@ describe('ArticlesController (e2e)', () => {
 
       const response = await request(app.getHttpServer())
         .get('/articles')
-        .query(dto);
+        .query(dto)
+        .expect(200);
 
-      expect(response.status).toBe(200);
       expect(response.body.data.length).toBe(5);
       expect(response.body.data[0]).toHaveProperty('id');
       expect(response.body.data[0]).toHaveProperty('title');
@@ -78,9 +83,9 @@ describe('ArticlesController (e2e)', () => {
 
       const response = await request(app.getHttpServer())
         .get('/articles')
-        .query(dto);
+        .query(dto)
+        .expect(200);
 
-      expect(response.status).toBe(200);
       expect(response.body.data.length).toBe(5);
       expect(response.body.data[0]).toHaveProperty('id');
       expect(response.body.data[0]).toHaveProperty('title');
@@ -94,9 +99,9 @@ describe('ArticlesController (e2e)', () => {
 
       const response = await request(app.getHttpServer())
         .get('/articles')
-        .query(dto);
+        .query(dto)
+        .expect(200);
 
-      expect(response.status).toBe(200);
       expect(response.body.data.length).toBe(5);
       expect(response.body.data[0]).toHaveProperty('id');
       expect(response.body.data[0]).toHaveProperty('title');
@@ -109,9 +114,9 @@ describe('ArticlesController (e2e)', () => {
 
       const response = await request(app.getHttpServer())
         .get('/articles')
-        .query(dto);
+        .query(dto)
+        .expect(200);
 
-      expect(response.status).toBe(200);
       expect(response.body.data.length).toBe(0);
       expect(response.body.total).toBe(25);
     });
@@ -126,9 +131,9 @@ describe('ArticlesController (e2e)', () => {
 
       const response = await request(app.getHttpServer())
         .get('/articles')
-        .query(dto);
+        .query(dto)
+        .expect(200);
 
-      expect(response.status).toBe(200);
       expect(response.body.data.length).toBe(5);
       expect(response.body.data[0]).toHaveProperty('id');
       expect(response.body.data[0]).toHaveProperty('title');
@@ -136,21 +141,29 @@ describe('ArticlesController (e2e)', () => {
     });
 
     it('should filter articles by author', async () => {
-      await new ArticlesFactory(orm.em).create(5, { author: 'Test Author' });
-      await new ArticlesFactory(orm.em).create(5, { author: 'Other Author' });
+      const testAuthor = await new AuthorFactory(orm.em).createOne({
+        name: 'Test Author',
+      });
+      const otherAuthor = await new AuthorFactory(orm.em).createOne({
+        name: 'Other Author',
+      });
+
+      await new ArticlesFactory(orm.em).create(5, { author: testAuthor });
+      await new ArticlesFactory(orm.em).create(5, { author: otherAuthor });
 
       const dto: FindArticlesDto = {
-        author: 'Test Author',
+        authorId: testAuthor.id.toString(),
       };
 
       const response = await request(app.getHttpServer())
         .get('/articles')
-        .query(dto);
+        .query(dto)
+        .expect(200);
 
-      expect(response.status).toBe(200);
       expect(response.body.data.length).toBe(5);
       response.body.data.forEach((article: Articles) => {
-        expect(article.author).toBe('Test Author');
+        expect(article.author.name).toBe('Test Author');
+        expect(article.author.id).toBe(testAuthor.id);
       });
       expect(response.body.total).toBe(5);
     });
@@ -163,9 +176,9 @@ describe('ArticlesController (e2e)', () => {
 
       const response = await request(app.getHttpServer())
         .get('/articles')
-        .query(dto);
+        .query(dto)
+        .expect(200);
 
-      expect(response.status).toBe(200);
       expect(response.body.data.length).toBe(10);
       expect(response.body.data[0].views).toBe(10);
       expect(response.body.data[9].views).toBe(5);
@@ -185,9 +198,9 @@ describe('ArticlesController (e2e)', () => {
 
       const response = await request(app.getHttpServer())
         .post('/articles/summary')
-        .send(dto);
+        .send(dto)
+        .expect(201);
 
-      expect(response.status).toBe(201);
       expect(response.body.summary).toBe('Test Summary');
     });
 

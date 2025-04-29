@@ -34,14 +34,18 @@ export class ArticlesService {
     return { data, total };
   }
 
-  async findMostViewedAndSharedArticles(): Promise<StatsResponse> {
+  async findMostViewedAndSharedArticles(
+    params: Partial<FindArticlesDto> = {},
+  ): Promise<StatsResponse> {
+    const withAuthorFilter = params.authorId ? true : undefined;
+
     const [mostViewed, mostShared] = await Promise.all([
       this.repository.find(
-        {},
+        withAuthorFilter ? { author: +params.authorId } : {},
         { orderBy: { views: 'DESC' }, limit: 1, populate: ['author'] },
       ),
       this.repository.find(
-        {},
+        withAuthorFilter ? { author: +params.authorId } : {},
         { orderBy: { shares: 'DESC' }, limit: 1, populate: ['author'] },
       ),
     ]);
@@ -102,7 +106,7 @@ export class ArticlesService {
     where: FilterQuery<any>,
   ): any {
     if (params?.authorId) {
-      where['author.id'] = params.authorId;
+      where['author'] = params.authorId;
     }
   }
 }

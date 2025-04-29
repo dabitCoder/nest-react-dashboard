@@ -21,7 +21,7 @@ export class Authors {
   @Property({ type: 'date', onUpdate: () => new Date() })
   updatedAt: Date = new Date();
 
-  @OneToMany(() => Articles, (article) => article.author)
+  @OneToMany(() => Articles, (article) => article.author, { eager: false })
   articles = new Collection<Articles>(this);
 
   constructor(name: string) {

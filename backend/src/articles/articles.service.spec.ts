@@ -12,6 +12,8 @@ import {
 import { FindArticlesDto, SortBy } from './dto/find-articles.dto';
 import { faker } from '@faker-js/faker';
 import { CreateSummaryDto } from './dto/create-summary.dto';
+import { AuthorFactory } from '../database/factories/AuthorsFactory';
+import { Authors } from '../authors/entities/authors.entity';
 
 describe('ArticlesService', () => {
   let service: ArticlesService;
@@ -22,7 +24,6 @@ describe('ArticlesService', () => {
       imports: [
         MikroOrmModule.forRoot({
           ...testingDatabaseConfig,
-          autoLoadEntities: true,
           allowGlobalContext: true,
         }),
         MikroOrmModule.forFeature([Articles]),
@@ -35,6 +36,7 @@ describe('ArticlesService', () => {
   });
 
   afterEach(async () => {
+    await orm.em.nativeDelete(Authors, {});
     await orm.em.nativeDelete(Articles, {});
   });
 
@@ -70,21 +72,28 @@ describe('ArticlesService', () => {
     });
 
     it('should filter by author and sort by views descending', async () => {
+      const sanderson = await new AuthorFactory(orm.em).createOne({
+        name: 'Brandon Sanderson',
+      });
+      const another = await new AuthorFactory(orm.em).createOne({
+        name: 'Another Author',
+      });
+
       await new ArticlesFactory(orm.em).create(3, {
-        author: 'Brandon Sanderson',
+        author: sanderson,
         views: 100,
       });
       await new ArticlesFactory(orm.em).create(2, {
-        author: 'Brandon Sanderson',
+        author: sanderson,
         views: 50,
       });
       await new ArticlesFactory(orm.em).create(5, {
-        author: 'Another Author',
+        author: another,
         views: 200,
       });
 
       const dto: FindArticlesDto = {
-        author: 'Brandon Sanderson',
+        authorId: sanderson.id.toString(),
         sortBy: SortBy.VIEWS,
         sortOrder: 'DESC',
       };
@@ -92,15 +101,15 @@ describe('ArticlesService', () => {
       const actual = await service.findAll(dto);
 
       expect(actual.total).toBe(5);
-      expect(actual.data[0].author).toBe('Brandon Sanderson');
+      expect(actual.data[0].author.name).toBe('Brandon Sanderson');
       expect(actual.data[0].views).toBe(100);
-      expect(actual.data[1].author).toBe('Brandon Sanderson');
+      expect(actual.data[1].author.name).toBe('Brandon Sanderson');
       expect(actual.data[1].views).toBe(100);
-      expect(actual.data[2].author).toBe('Brandon Sanderson');
+      expect(actual.data[2].author.name).toBe('Brandon Sanderson');
       expect(actual.data[2].views).toBe(100);
-      expect(actual.data[3].author).toBe('Brandon Sanderson');
+      expect(actual.data[3].author.name).toBe('Brandon Sanderson');
       expect(actual.data[3].views).toBe(50);
-      expect(actual.data[4].author).toBe('Brandon Sanderson');
+      expect(actual.data[4].author.name).toBe('Brandon Sanderson');
       expect(actual.data[4].views).toBe(50);
 
       for (let i = 0; i < actual.data.length - 1; i++) {
@@ -119,32 +128,46 @@ describe('ArticlesService', () => {
     });
 
     describe('filters', () => {
+      let testingAuthor: Authors;
+      let johnDoeAuthor: Authors;
+
+      beforeEach(async () => {
+        testingAuthor = await new AuthorFactory(orm.em).createOne({
+          name: 'Testing author',
+        });
+
+        johnDoeAuthor = await new AuthorFactory(orm.em).createOne({
+          name: 'John Doe',
+        });
+      });
+
       it('should filter articles by author', async () => {
         await new ArticlesFactory(orm.em).create(5, {
-          author: 'Testing author',
+          author: testingAuthor,
         });
-        await new ArticlesFactory(orm.em).create(10, { author: 'John Doe' });
+        await new ArticlesFactory(orm.em).create(10, { author: johnDoeAuthor });
 
         const dto: FindArticlesDto = {
-          author: 'Testing author',
+          authorId: testingAuthor.id.toString(),
         };
 
         const actual = await service.findAll(dto);
         expect(actual.data.length).toBe(5);
 
         actual.data.forEach((article) => {
-          expect(article.author).toEqual(dto.author);
+          expect(article.author.id).toEqual(+dto.authorId);
+          expect(article.author.name).toEqual(testingAuthor.name);
         });
       });
 
       it('should return an empty array if authors do not have articles', async () => {
         await new ArticlesFactory(orm.em).create(5, {
-          author: 'Testing author',
+          author: testingAuthor,
         });
-        await new ArticlesFactory(orm.em).create(10, { author: 'John Doe' });
+        await new ArticlesFactory(orm.em).create(10, { author: johnDoeAuthor });
 
         const dto: FindArticlesDto = {
-          author: 'Hello Reviewers',
+          authorId: '999',
         };
 
         const actual = await service.findAll(dto);
@@ -398,6 +421,70 @@ describe('ArticlesService', () => {
       await expect(service.createSummary({ articleId: 9999 })).rejects.toThrow(
         NotFoundException,
       );
+    });
+  });
+
+  describe('findMostViewedAndSharedArticles', () => {
+    it('should find the most viewed and most shared articles without author filter', async () => {
+      const mostViewed = await new ArticlesFactory(orm.em).create(1, {
+        views: 1000,
+      });
+      await new ArticlesFactory(orm.em).create(1, {
+        views: 10,
+      });
+      const mostShared = await new ArticlesFactory(orm.em).create(1, {
+        shares: 10000,
+      });
+      await new ArticlesFactory(orm.em).create(1, {
+        shares: 10,
+      });
+
+      const actual = await service.findMostViewedAndSharedArticles();
+      expect(actual.mostViewed).toEqual(mostViewed);
+      expect(actual.mostShared).toEqual(mostShared);
+    });
+
+    it('should find the most viewed and most shared articles with author filter', async () => {
+      const author = await new AuthorFactory(orm.em).createOne({
+        name: 'Brandon Sanderson',
+      });
+      const randomAuthor = await new AuthorFactory(orm.em).createOne();
+
+      const mostViewed = await new ArticlesFactory(orm.em).createOne({
+        views: 1000,
+        author: author,
+      });
+      await new ArticlesFactory(orm.em).createOne({
+        views: 10,
+        author: randomAuthor,
+      });
+
+      const mostShared = await new ArticlesFactory(orm.em).createOne({
+        shares: 10000,
+        author: author,
+      });
+      await new ArticlesFactory(orm.em).createOne({
+        shares: 10,
+        author: randomAuthor,
+      });
+
+      const actual = await service.findMostViewedAndSharedArticles({
+        authorId: author.id.toString(),
+      });
+
+      expect(actual.mostViewed[0]).toEqual(mostViewed);
+      expect(actual.mostShared[0]).toEqual(mostShared);
+    });
+
+    it('should return empty arrays if no articles are found', async () => {
+      const author = await new AuthorFactory(orm.em).createOne();
+
+      const actual = await service.findMostViewedAndSharedArticles({
+        authorId: author.id.toString(),
+      });
+
+      expect(actual.mostViewed).toEqual([]);
+      expect(actual.mostShared).toEqual([]);
     });
   });
 });

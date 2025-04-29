@@ -10,7 +10,7 @@ export class AuthorsService {
     private readonly repository: EntityRepository<Authors>,
   ) {}
 
-  findAll() {
+  findAll(): Promise<Authors[]> {
     return this.repository.findAll();
   }
 }

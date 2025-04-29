@@ -1,6 +1,6 @@
 import SearchInput from "../common/SearchInput";
 import { Author, SortBy, SortOrder } from "../../types.ts";
-import { ChangeEvent, FC } from "react";
+import { FC } from "react";
 import ArticlesFiltersSortBy from "./filters/ArticlesFiltersSortBy.tsx";
 import ArticlesFiltersSortOrder from "./filters/ArticlesFiltersSortOrder.tsx";
 import ArticlesFiltersItemsPerPage from "./filters/ArticlesFiltersItemsPerPage.tsx";
@@ -35,10 +35,6 @@ const ArticlesHeader: FC<ArticlesHeaderProps> = ({
   onAuthorFilterChange,
   selectedAuthorId,
 }) => {
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    onSearchChange(event.target.value);
-  };
-
   return (
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
       <h2 className="text-xl font-semibold text-gray-800">
@@ -70,10 +66,7 @@ const ArticlesHeader: FC<ArticlesHeaderProps> = ({
             onPageSizeChange={onPageSizeChange}
           />
         </div>
-        <SearchInput
-          handleSearchChange={handleChange}
-          searchTerm={searchTerm}
-        />
+        <SearchInput onSearchChange={onSearchChange} searchTerm={searchTerm} />
       </div>
     </div>
   );

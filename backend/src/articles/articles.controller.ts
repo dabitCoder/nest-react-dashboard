@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { FindArticlesDto } from './dto/find-articles.dto';
 import { CreateSummaryDto } from './dto/create-summary.dto';
 import { FindAllResponse, StatsResponse } from './types';
+import { Articles } from './entities/articles.entity';
 
 @Controller('articles')
 export class ArticlesController {
@@ -11,6 +12,12 @@ export class ArticlesController {
   @Get()
   findAll(@Query() params: FindArticlesDto): Promise<FindAllResponse> {
     return this.articlesService.findAll(params);
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string): Promise<Articles> {
+    console.log(id);
+    return this.articlesService.findOne(+id);
   }
 
   /**

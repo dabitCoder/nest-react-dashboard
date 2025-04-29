@@ -5,6 +5,7 @@ export interface Article {
 	content: string;
 	views: number;
 	shares: number;
+	summary: string;
 	createdAt: string;
 	updatedAt: string;
 }

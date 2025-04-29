@@ -6,6 +6,7 @@ import { EntityRepository, FilterQuery, FindOptions } from '@mikro-orm/mariadb';
 import { FindArticlesDto } from './dto/find-articles.dto';
 import { CreateSummaryDto } from './dto/create-summary.dto';
 import { FindAllResponse, StatsResponse } from './types';
+import { FindOneArticlesDTO } from './dto/find-one-articles.dto';
 
 @Injectable()
 export class ArticlesService {
@@ -32,6 +33,18 @@ export class ArticlesService {
     });
 
     return { data, total };
+  }
+
+  async findOne(id: number = null): Promise<Articles> {
+    const article = await this.repository.findOne(+id, {
+      populate: ['author'],
+    });
+
+    if (!article) {
+      throw new NotFoundException(`Article with ${id} was not found`);
+    }
+
+    return article;
   }
 
   async findMostViewedAndSharedArticles(

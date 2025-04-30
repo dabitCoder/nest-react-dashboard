@@ -3,22 +3,16 @@
   "packageManager": "yarn@4.6.0",
   "scripts": {
     "setup:environment": "yarn workspace backend migrate && yarn workspace backend seeder:run",
-    "dev": "concurrently \"yarn workspace frontend dev\" \"yarn workspace backend start:dev\"",
+    "dev": "concurrently \"yarn workspace backend start:dev\" \"yarn workspace frontend dev\"",
     "build": "yarn workspace backend build && yarn workspace frontend build",
-    "test": "yarn workspace backend test && yarn workspace backend test:e2e && yarn workspaces frontend test"
+    "test": "yarn workspace backend test && yarn workspace backend test:e2e && yarn workspace frontend test"
   },
   "workspaces": [
     "frontend",
     "backend"
   ],
   "devDependencies": {
-    "@testing-library/dom": "^10.4.0",
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.3.0",
-    "@types/react": "^19.1.2",
-    "@types/react-dom": "^19.1.2",
-    "concurrently": "^9.1.2",
-    "jest-environment-jsdom": "^29.7.0"
+    "concurrently": "^9.1.2"
   },
   "dependencies": {
     "corepack": "^0.32.0"

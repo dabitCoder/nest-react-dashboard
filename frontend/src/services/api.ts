@@ -1,9 +1,10 @@
 import axios from "axios";
 import {
-	ArticleQueryParams,
-	ArticlesResponse,
-	Author, StatsQueryParams,
-	StatsResponse,
+  ArticleQueryParams,
+  ArticlesResponse,
+  Author,
+  StatsQueryParams,
+  StatsResponse,
 } from "../types.ts";
 
 const API_BASE_URL = "http://localhost:3000";
@@ -20,7 +21,9 @@ export const fetchArticles = async (
   }
 };
 
-export const fetchArticlesStats = async (params: StatsQueryParams = {}): Promise<StatsResponse> => {
+export const fetchArticlesStats = async (
+  params: StatsQueryParams = {},
+): Promise<StatsResponse> => {
   try {
     const response = await axios.get(`${API_BASE_URL}/articles/stats`, {
       params,
@@ -35,6 +38,16 @@ export const fetchArticlesStats = async (params: StatsQueryParams = {}): Promise
 export const fetchAuthors = async (): Promise<Author[]> => {
   try {
     const response = await axios.get(`${API_BASE_URL}/authors`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching articles:", error);
+    throw error;
+  }
+};
+
+export const fetchArticle = async (articleId: string) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/articles/${articleId}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching articles:", error);

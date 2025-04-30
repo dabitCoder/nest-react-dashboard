@@ -4,15 +4,15 @@ import { SeedManager } from '@mikro-orm/seeder';
 
 const config: Options = {
   driver: MariaDbDriver,
-  host: 'localhost',
-  port: 3306,
-  user: 'root',
-  password: '',
-  dbName: 'nest-dashboard',
+  host: process.env.API_DB_HOST ?? 'localhost',
+  port: parseInt(process.env.API_DB_PORT) ?? 3306,
+  user: process.env.API_DB_USER ?? 'root',
+  password: process.env.API_DB_PASSWORD ?? '',
+  dbName: process.env.API_DB_NAME ?? 'nest-dashboard',
   entities: ['./dist/**/entities/**.js'],
   entitiesTs: ['./src/**/entities/**.ts'],
   extensions: [Migrator, SeedManager],
-  debug: true,
+  debug: process.env.NODE_ENV !== 'production',
   migrations: {
     path: './dist/database/migrations',
     pathTs: './src/database/migrations',

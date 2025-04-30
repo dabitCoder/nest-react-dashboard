@@ -1,0 +1,9 @@
+.git
+.idea
+.vscode
+node_modules
+.yarn/cache
+dist
+frontend/dist
+backend/dist
+.DS_Store

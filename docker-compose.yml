@@ -1,0 +1,68 @@
+version: "3.9"
+services:
+    database:
+      image: mariadb
+      container_name: nest-dashboard-database
+      restart: unless-stopped
+      environment:
+        MYSQL_ROOT_PASSWORD: 'password'
+        MYSQL_PASSWORD: 'password'
+        MYSQL_DATABASE: 'nest-dashboard'
+        MYSQL_USER: 'root'
+      ports:
+        - '3306:3306'
+      healthcheck:
+        test: [ 'CMD', 'mysqladmin', 'ping', '--silent' ]
+        timeout: 10s
+        retries: 10
+      networks:
+        - nest-dashboard
+    phpmyadmin:
+      image: phpmyadmin/phpmyadmin
+      container_name: phpmyadmin
+      depends_on:
+        - database
+      environment:
+        PMA_HOST: database
+      restart: unless-stopped
+      ports:
+        - '81:80'
+      networks:
+        - nest-dashboard
+    api:
+      image: nest-dashboard-api/node:lts-alpine
+      build:
+        context: .
+        dockerfile: backend/Dockerfile
+      ports:
+        - '3000:3000'
+      depends_on:
+        - database
+      restart: unless-stopped
+      container_name: nest-dashboard-api
+      environment:
+        API_DB_USER: 'root'
+        API_DB_PASSWORD: 'password'
+        API_DB_NAME: 'nest-dashboard'
+        API_DB_HOST: 'database'
+        API_DB_PORT: '3306'
+        NODE_ENV: 'production'
+      networks:
+        - nest-dashboard
+    web:
+      build:
+        context: .
+        dockerfile: frontend/Dockerfile
+        args:
+          VITE_API_URL: "http://localhost:3000"
+      depends_on:
+        - api
+      ports:
+        - "80:80"
+      restart: unless-stopped
+      networks:
+        - nest-dashboard
+
+networks:
+  nest-dashboard:
+    driver: bridge

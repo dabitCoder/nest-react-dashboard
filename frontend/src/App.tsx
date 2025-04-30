@@ -1,9 +1,8 @@
 import Header from "./components/Header.tsx";
-import { FC } from "react";
-import DashboardContent from "./components/DashboardContent.tsx";
+import { FC, ReactElement } from "react";
+import DashboardContent from "./pages/Dashboard/DashboardContent.tsx";
 
-const App: FC = () => {
-
+const App: FC = (): ReactElement => {
   return (
     <div className="min-h-screen w-full">
       <Header />

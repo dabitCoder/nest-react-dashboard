@@ -6,7 +6,6 @@ import { EntityRepository, FilterQuery, FindOptions } from '@mikro-orm/mariadb';
 import { FindArticlesDto } from './dto/find-articles.dto';
 import { CreateSummaryDto } from './dto/create-summary.dto';
 import { FindAllResponse, StatsResponse } from './types';
-import { FindOneArticlesDTO } from './dto/find-one-articles.dto';
 
 @Injectable()
 export class ArticlesService {

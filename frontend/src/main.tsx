@@ -9,7 +9,7 @@ createRoot(document.getElementById("root")!).render(
     <BrowserRouter>
       <Routes>
         {routes.map((route) => (
-          <Route element={route.element()} path={route.path} />
+          <Route Component={route.component} path={route.path} />
         ))}
       </Routes>
     </BrowserRouter>

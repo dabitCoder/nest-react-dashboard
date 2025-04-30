@@ -23,7 +23,7 @@ describe("ArticleCard", () => {
   const setup = () =>
     render(
       <MemoryRouter>
-        <ArticleCard article={mockArticles[0]} />
+        <ArticleCard article={mockArticles[0]} isPending={false}/>
       </MemoryRouter>,
     );
 
@@ -42,7 +42,7 @@ describe("ArticleCard", () => {
   it("should render the author", () => {
     setup();
     expect(
-      screen.getByText(`by ${mockArticles[0].author}`),
+      screen.getByText(`${mockArticles[0].author.name}`),
     ).toBeInTheDocument();
   });
 

@@ -31,7 +31,7 @@ describe('AuthorsController (e2e)', () => {
     orm = moduleFixture.get<MikroORM>(MikroORM);
   });
 
-  afterEach(async () => {
+  beforeEach(async () => {
     await orm.em.nativeDelete(Authors, {});
   });
 
@@ -48,7 +48,6 @@ describe('AuthorsController (e2e)', () => {
         .get('/authors')
         .expect(200);
 
-      expect(response.status).toBe(200);
       expect(response.body.length).toBe(10);
       response.body.forEach((author) => {
         expect(author).toHaveProperty('id');

@@ -1,0 +1,454 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ArticlesHeader Component > should match snapshot 1`] = `
+{
+  "asFragment": [Function],
+  "baseElement": <body>
+    <div>
+      <div
+        class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6"
+      >
+        <h2
+          class="text-xl font-semibold text-gray-800"
+        >
+          All Articles (
+          100
+           in total)
+        </h2>
+        <div
+          class="flex flex-col md:flex-row md:items-center gap-2"
+        >
+          <div
+            class="relative rounded-m"
+          >
+            <select
+              aria-label="filter-by-author"
+              class="block w-full py-2 pl-3 pr-10 text-sm text-gray-900 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
+            >
+              <option
+                value=""
+              >
+                Filter by Author
+              </option>
+              <option
+                value="1"
+              >
+                Author 1
+              </option>
+              <option
+                value="2"
+              >
+                Author 2
+              </option>
+            </select>
+            <div
+              class="absolute inset-y-0 right-0 flex items-center pointer-events-none"
+            >
+              <svg
+                aria-hidden="true"
+                class="w-5 h-5 text-gray-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  clip-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </div>
+          </div>
+          <div
+            class="relative rounded-m"
+          >
+            <select
+              aria-label="sort-by"
+              class="block w-full py-2 pl-3 pr-10 text-sm text-gray-900 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
+            >
+              <option
+                value=""
+              >
+                Sort by
+              </option>
+              <option
+                value="views"
+              >
+                Views
+              </option>
+              <option
+                value="shares"
+              >
+                Shares
+              </option>
+            </select>
+            <div
+              class="absolute inset-y-0 right-0 flex items-center pointer-events-none"
+            >
+              <svg
+                aria-hidden="true"
+                class="w-5 h-5 text-gray-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  clip-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </div>
+          </div>
+          <div
+            class="relative rounded-md "
+          >
+            <select
+              aria-label="sort-order"
+              class="block w-full py-2 pl-3 pr-10 text-sm text-gray-900 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
+            >
+              <option
+                value=""
+              >
+                Sort Order
+              </option>
+              <option
+                value="ASC"
+              >
+                Low to High
+              </option>
+              <option
+                value="DESC"
+              >
+                High to Low
+              </option>
+            </select>
+            <div
+              class="absolute inset-y-0 right-0 flex items-center pointer-events-none"
+            >
+              <svg
+                aria-hidden="true"
+                class="w-5 h-5 text-gray-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  clip-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </div>
+          </div>
+          <div
+            class="relative rounded-md"
+          >
+            <select
+              aria-label="items-per-page"
+              class="block w-full py-2 pl-3 pr-10 text-sm text-gray-900 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
+            >
+              <option
+                value=""
+              >
+                Items per page
+              </option>
+              <option
+                value="5"
+              >
+                5
+              </option>
+              <option
+                value="10"
+              >
+                10
+              </option>
+              <option
+                value="20"
+              >
+                20
+              </option>
+              <option
+                value="50"
+              >
+                50
+              </option>
+            </select>
+            <div
+              class="absolute inset-y-0 right-0 flex items-center pointer-events-none"
+            >
+              <svg
+                aria-hidden="true"
+                class="w-5 h-5 text-gray-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  clip-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </div>
+          </div>
+          <input
+            class="w-full md:w-60 p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+            placeholder="Search articles..."
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+  </body>,
+  "container": <div>
+    <div
+      class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6"
+    >
+      <h2
+        class="text-xl font-semibold text-gray-800"
+      >
+        All Articles (
+        100
+         in total)
+      </h2>
+      <div
+        class="flex flex-col md:flex-row md:items-center gap-2"
+      >
+        <div
+          class="relative rounded-m"
+        >
+          <select
+            aria-label="filter-by-author"
+            class="block w-full py-2 pl-3 pr-10 text-sm text-gray-900 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
+          >
+            <option
+              value=""
+            >
+              Filter by Author
+            </option>
+            <option
+              value="1"
+            >
+              Author 1
+            </option>
+            <option
+              value="2"
+            >
+              Author 2
+            </option>
+          </select>
+          <div
+            class="absolute inset-y-0 right-0 flex items-center pointer-events-none"
+          >
+            <svg
+              aria-hidden="true"
+              class="w-5 h-5 text-gray-400"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                clip-rule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="relative rounded-m"
+        >
+          <select
+            aria-label="sort-by"
+            class="block w-full py-2 pl-3 pr-10 text-sm text-gray-900 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
+          >
+            <option
+              value=""
+            >
+              Sort by
+            </option>
+            <option
+              value="views"
+            >
+              Views
+            </option>
+            <option
+              value="shares"
+            >
+              Shares
+            </option>
+          </select>
+          <div
+            class="absolute inset-y-0 right-0 flex items-center pointer-events-none"
+          >
+            <svg
+              aria-hidden="true"
+              class="w-5 h-5 text-gray-400"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                clip-rule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="relative rounded-md "
+        >
+          <select
+            aria-label="sort-order"
+            class="block w-full py-2 pl-3 pr-10 text-sm text-gray-900 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
+          >
+            <option
+              value=""
+            >
+              Sort Order
+            </option>
+            <option
+              value="ASC"
+            >
+              Low to High
+            </option>
+            <option
+              value="DESC"
+            >
+              High to Low
+            </option>
+          </select>
+          <div
+            class="absolute inset-y-0 right-0 flex items-center pointer-events-none"
+          >
+            <svg
+              aria-hidden="true"
+              class="w-5 h-5 text-gray-400"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                clip-rule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="relative rounded-md"
+        >
+          <select
+            aria-label="items-per-page"
+            class="block w-full py-2 pl-3 pr-10 text-sm text-gray-900 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
+          >
+            <option
+              value=""
+            >
+              Items per page
+            </option>
+            <option
+              value="5"
+            >
+              5
+            </option>
+            <option
+              value="10"
+            >
+              10
+            </option>
+            <option
+              value="20"
+            >
+              20
+            </option>
+            <option
+              value="50"
+            >
+              50
+            </option>
+          </select>
+          <div
+            class="absolute inset-y-0 right-0 flex items-center pointer-events-none"
+          >
+            <svg
+              aria-hidden="true"
+              class="w-5 h-5 text-gray-400"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                clip-rule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </div>
+        </div>
+        <input
+          class="w-full md:w-60 p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+          placeholder="Search articles..."
+          type="text"
+          value=""
+        />
+      </div>
+    </div>
+  </div>,
+  "debug": [Function],
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
+  "rerender": [Function],
+  "unmount": [Function],
+}
+`;

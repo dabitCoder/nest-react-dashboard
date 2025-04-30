@@ -1,5 +1,4 @@
-"use client"
-import Header from "../components/Header.tsx";
+import Header from "../../components/Header.tsx";
 import SummaryContent from "./SummaryContent.tsx";
 
 const Summary = () => {

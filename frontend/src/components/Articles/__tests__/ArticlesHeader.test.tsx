@@ -12,8 +12,13 @@ const mockProps = {
   handleSortChange: vitest.fn(),
   handleSortOrderChange: vitest.fn(),
   onPageSizeChange: vitest.fn(),
-  pageSizes: [10, 20, 50],
   currentLimit: 10,
+  authors: [
+    { id: 1, name: "Author 1" ,createdAt: "2025-04-29", updatedAt: "2025-04-29"},
+    { id: 2, name: "Author 2" ,createdAt: "2025-04-29", updatedAt: "2025-04-29"},
+  ],
+  onAuthorFilterChange: vitest.fn(),
+  selectedAuthorId: "1",
 };
 
 describe("ArticlesHeader Component", () => {
@@ -38,7 +43,7 @@ describe("ArticlesHeader Component", () => {
 
   it("should render the Sort By dropdown with options", () => {
     render(<ArticlesHeader {...mockProps} />);
-    const sortBySelect = screen.getByRole("combobox", { name: "sort-by"});
+    const sortBySelect = screen.getByRole("combobox", { name: "sort-by" });
     expect(sortBySelect).toBeInTheDocument();
     expect(screen.getByText("Sort by")).toBeInTheDocument();
     expect(screen.getByText("Views")).toBeInTheDocument();
@@ -47,7 +52,7 @@ describe("ArticlesHeader Component", () => {
 
   it("should call handleSortChange when the Sort By value changes", () => {
     render(<ArticlesHeader {...mockProps} />);
-    const sortBySelect = screen.getByRole("combobox", { name: "sort-by"});
+    const sortBySelect = screen.getByRole("combobox", { name: "sort-by" });
     fireEvent.change(sortBySelect, { target: { value: "views" } });
     expect(mockProps.handleSortChange).toHaveBeenCalledWith("views");
 
@@ -85,9 +90,6 @@ describe("ArticlesHeader Component", () => {
     });
     expect(pageSizeSelect).toBeInTheDocument();
     expect(screen.getByText("Items per page")).toBeInTheDocument();
-    mockProps.pageSizes.forEach((size) => {
-      expect(screen.getByText(size.toString())).toBeInTheDocument();
-    });
   });
 
   it("should call onPageSizeChange when the Items per page value changes", () => {

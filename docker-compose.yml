@@ -7,7 +7,7 @@ services:
       environment:
         MYSQL_ROOT_PASSWORD: 'password'
         MYSQL_PASSWORD: 'password'
-        MYSQL_DATABASE: 'nest-dashboard'
+        MYSQL_DATABASE: 'articles_db'
         MYSQL_USER: 'root'
       ports:
         - '3306:3306'
@@ -43,7 +43,7 @@ services:
       environment:
         API_DB_USER: 'root'
         API_DB_PASSWORD: 'password'
-        API_DB_NAME: 'nest-dashboard'
+        API_DB_NAME: 'articles_db'
         API_DB_HOST: 'database'
         API_DB_PORT: '3306'
         NODE_ENV: 'production'

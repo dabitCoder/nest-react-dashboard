@@ -1,84 +1,63 @@
-import { Article } from "../../types.ts";
-import { FC, ReactNode } from "react";
+import { FC, ReactElement } from "react";
+import { Share2, Eye, ChevronRight } from "lucide-react";
+import { Article } from "../../types";
+import ArticlePendingCard from "./ArticlePendingCard.tsx";
 import { useNavigate } from "react-router";
 
-interface ArticleCardProps {
+interface Props {
   article: Article;
+  isPending: boolean;
 }
 
-const ArticleCard: FC<ArticleCardProps> = ({ article }): ReactNode => {
-  const { id, title, content, author, views, shares } = article;
+const ArticleCard: FC<Props> = ({ article, isPending }): ReactElement => {
   const navigate = useNavigate();
 
+  if (isPending) {
+    return <ArticlePendingCard />;
+  }
+
   return (
-    <div
-      aria-label={`article-card-${id}`}
-      key={id}
-      className="bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-300 transform hover:-translate-y-1 hover:shadow-md flex flex-col h-full"
-    >
-      <div className="p-4 flex justify-end gap-2">
-        <span className="inline-flex items-center rounded-full bg-emerald-100 bg-opacity-50 px-2 py-1 text-xs font-semibold text-emerald-700">
-          <svg
-            className="w-4 h-4 mr-1"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-            ></path>
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7 1.274 4.057-1.178 8.943-4.968 10.957-3.79-2.014-7.58-4.957-9.542-7z"
-            ></path>
-          </svg>
-          {views}
-        </span>
-        <span className="inline-flex items-center rounded-full bg-blue-100 bg-opacity-50 px-2 py-1 text-xs font-semibold text-blue-700">
-          <svg
-            className="w-4 h-4 mr-1"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M19 9l-7 7-7-7m14-8v10a7 7 0 01-7 7m0 0l-7-7m7 7V3"
-            ></path>
-          </svg>
-          {shares}
-        </span>
-      </div>
-      <div className="p-5 flex-grow">
-        <h3
-          aria-label={`article-card-title-${id}`}
-          className="text-lg font-semibold text-gray-800 mb-2 line-clamp-1"
-        >
-          {title}
-        </h3>
-        <p className="text-sm text-gray-500 mb-3">by {author}</p>
-        <p className="text-gray-600 mb-4 line-clamp-2">{content}</p>
+    <article aria-label="article-card" className="group relative overflow-hidden rounded-xl border border-slate-100 bg-white shadow-sm transition-all duration-300 hover:shadow-lg hover:border-slate-200">
+      <div className="flex items-center justify-between border-b border-slate-50 bg-gradient-to-r from-slate-50 to-white px-6 py-4">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 text-blue-600">
+            <Eye className="h-4 w-4" />
+            <span className="text-sm">{article?.views ?? 0} views</span>
+          </div>
+          <div className="flex items-center gap-2 text-emerald-600">
+            <Share2 className="h-4 w-4" />
+            <span className="text-sm">{article?.shares ?? 0} shares</span>
+          </div>
+        </div>
       </div>
 
-      <div className="p-4">
+      <div className="space-y-4 px-6 py-5">
+        <div className="space-y-2">
+          <h2 aria-label={`article-card-title-${article.id}`} className="text-xl font-semibold text-slate-800 group-hover:text-blue-600 transition-colors duration-300 line-clamp-1">
+            {article?.title ?? "Title not found"}
+          </h2>
+          <p className="text-sm text-slate-500">
+            By{" "}
+            <span className="font-medium text-slate-700">
+              {article?.author?.name ?? "No author found"}
+            </span>
+          </p>
+        </div>
+
+        <p className="text-slate-600 line-clamp-2">{article?.content ?? "No content"}</p>
+      </div>
+
+      <div className="border-t border-slate-50 px-6 py-4">
         <button
-          onClick={() => navigate(`/${id}/summary`)}
           aria-label="summarize-button"
-          className="w-full flex items-center justify-center bg-blue-400 text-white h-10 rounded-md hover:bg-blue-600 transition-colors cursor-pointer"
+          onClick={() => navigate(`/${article.id}/summary`)}
+          className="inline-flex items-center gap-2 rounded-lg bg-blue-50 px-4 py-2 text-sm font-medium text-blue-600 transition-colors duration-300 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer"
         >
-          <span className="text-sm font-medium">Summarize</span>
+          Summarize
+          <ChevronRight className="h-4 w-4" />
         </button>
       </div>
-    </div>
+    </article>
   );
 };
 

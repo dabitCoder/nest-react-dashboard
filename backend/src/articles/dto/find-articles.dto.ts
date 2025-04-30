@@ -16,7 +16,7 @@ export class FindArticlesDto {
 
   @IsOptional()
   @IsEnum(['ASC', 'DESC'])
-  sortOrder?: 'ASC' | 'DESC' = 'ASC';
+  sortOrder?: 'ASC' | 'DESC' = 'DESC';
 
   @IsOptional()
   @IsString()

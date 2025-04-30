@@ -21,12 +21,14 @@ const Highlights: FC<Props> = ({ error, stats, isPending }) => {
       <span>Welcome user, here's the summary of what's going on</span>
       <div className="mt-3 grid grid-cols-1 gap-6 md:grid-cols-2">
         <Metrics
+          aria-label={"most-viewed"}
           article={stats?.mostViewed?.[0] ?? null}
           isPending={isPending}
           colorScheme="blue"
           icon={<Eye className="h-4 w-4" />}
         />
         <Metrics
+          aria-label={"most-shared"}
           article={stats?.mostShared?.[0] ?? null}
           isPending={isPending}
           colorScheme="green"

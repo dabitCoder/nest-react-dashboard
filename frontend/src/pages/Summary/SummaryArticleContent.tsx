@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from "react";
 import { Sparkles } from "lucide-react";
-import TypingAnimation from "../components/common/TypingAnimation";
+import TypingAnimation from "../../components/common/TypingAnimation";
 
 interface SummarySectionProps {
   summary: string;

@@ -9,33 +9,33 @@ interface Props {
   icon: ReactElement;
 }
 
+const colors = {
+  blue: {
+    border: "border-blue-100",
+    gradient: "from-blue-50 to-indigo-50",
+    title: "text-blue-800",
+    subtext: "text-blue-500",
+    hoverBorder: "hover:border-blue-200",
+    activeBorder: "active:border-blue-300",
+    icon: "text-blue-500",
+  },
+  green: {
+    border: "border-emerald-100",
+    gradient: "from-emerald-50 to-teal-50",
+    title: "text-emerald-800",
+    subtext: "text-emerald-500",
+    hoverBorder: "hover:border-emerald-200",
+    activeBorder: "active:border-emerald-300",
+    icon: "text-emerald-500",
+  },
+};
+
 const Metrics: FC<Props> = ({
   article,
   isPending,
   colorScheme = "blue",
   icon,
 }): ReactElement => {
-  const colors = {
-    blue: {
-      border: "border-blue-100",
-      gradient: "from-blue-50 to-indigo-50",
-      title: "text-blue-800",
-      subtext: "text-blue-500",
-      hoverBorder: "hover:border-blue-200",
-      activeBorder: "active:border-blue-300",
-      icon: "text-blue-500",
-    },
-    green: {
-      border: "border-emerald-100",
-      gradient: "from-emerald-50 to-teal-50",
-      title: "text-emerald-800",
-      subtext: "text-emerald-500",
-      hoverBorder: "hover:border-emerald-200",
-      activeBorder: "active:border-emerald-300",
-      icon: "text-emerald-500",
-    },
-  };
-
   const currentColors = colors[colorScheme];
 
   if (isPending || !article) {
@@ -64,11 +64,11 @@ const Metrics: FC<Props> = ({
     >
       <div className="flex grow items-center justify-between p-5">
         <dl>
-          <dt className={`text-2xl font-bold ${currentColors.title}`}>
+          <dt aria-label="metrics-title" className={`text-2xl font-bold ${currentColors.title}`}>
             {article.title}
           </dt>
           <dd className={`text-sm font-medium ${currentColors.subtext}`}>
-            by {article.author.name}
+            by {article.author?.name}
           </dd>
         </dl>
         <div className="flex items-center gap-4">

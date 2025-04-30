@@ -1,15 +1,14 @@
 import App from "./App.tsx";
-import { ReactNode } from "react";
-import Summary from "./pages/Summary.tsx";
+import Summary from "./pages/Summary/Summary.tsx";
 
-const routes: { path: string; element: () => ReactNode }[] = [
+const routes = [
   {
     path: "/",
-    element: App,
+    component: App,
   },
   {
     path: "/:id/summary",
-    element: Summary,
+    component: Summary,
   },
 ];
 

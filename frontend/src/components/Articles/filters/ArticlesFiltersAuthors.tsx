@@ -28,7 +28,7 @@ const ArticlesFiltersAuthors: FC<Props> = ({
         <option value="">Filter by Author</option>
         {authors?.map((author) => (
           <option key={author.id} value={author.id}>
-            {author.name}
+            {author?.name}
           </option>
         ))}
       </select>

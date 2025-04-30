@@ -13,6 +13,66 @@
           "length": null,
           "mappedType": "integer"
         },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "date",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": null,
+          "mappedType": "date"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "date",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": null,
+          "mappedType": "date"
+        }
+      },
+      "name": "author",
+      "indexes": [
+        {
+          "keyName": "PRIMARY",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {},
+      "nativeEnums": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "length": null,
+          "mappedType": "integer"
+        },
         "title": {
           "name": "title",
           "type": "varchar(255)",
@@ -33,15 +93,15 @@
           "length": null,
           "mappedType": "text"
         },
-        "author": {
-          "name": "author",
-          "type": "varchar(255)",
-          "unsigned": false,
+        "author_id": {
+          "name": "author_id",
+          "type": "int",
+          "unsigned": true,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 255,
-          "mappedType": "string"
+          "length": null,
+          "mappedType": "integer"
         },
         "views": {
           "name": "views",
@@ -94,8 +154,18 @@
           "mappedType": "date"
         }
       },
-      "name": "article",
+      "name": "articles",
       "indexes": [
+        {
+          "columnNames": [
+            "author_id"
+          ],
+          "composite": false,
+          "keyName": "articles_author_id_index",
+          "constraint": false,
+          "primary": false,
+          "unique": false
+        },
         {
           "keyName": "PRIMARY",
           "columnNames": [
@@ -108,7 +178,20 @@
         }
       ],
       "checks": [],
-      "foreignKeys": {},
+      "foreignKeys": {
+        "articles_author_id_foreign": {
+          "constraintName": "articles_author_id_foreign",
+          "columnNames": [
+            "author_id"
+          ],
+          "localTableName": "articles",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "author",
+          "updateRule": "cascade"
+        }
+      },
       "nativeEnums": {}
     }
   ],

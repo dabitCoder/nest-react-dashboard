@@ -83,6 +83,7 @@ const useArticleQueryParams = () => {
 
   const updateLimit = useCallback(
     (newLimit: number) => {
+      console.log(newLimit)
       updateQueryParams({ limit: newLimit, page: 1 });
     },
     [updateQueryParams],

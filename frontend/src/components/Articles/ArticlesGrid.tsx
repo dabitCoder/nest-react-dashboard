@@ -34,7 +34,7 @@ const ArticlesGrid: FC<Props> = ({
   }
 
   return (
-    <section className="mt-14" ref={contentRef}>
+    <section aria-label="articles-section" className="mt-14" ref={contentRef}>
       <div className="flex flex-col md:grid md:grid-cols-3 gap-2 md:gap-6 mb-6">
         {articles.data.length ? (
           articles.data.map((article: Article) => (

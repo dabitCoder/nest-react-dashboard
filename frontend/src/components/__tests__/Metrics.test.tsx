@@ -1,29 +1,50 @@
 import { render, screen } from "@testing-library/react";
 import Metrics from "../Metrics";
+import { Article } from "../../types";
+import { Eye } from "lucide-react";
 
-describe("Metrics", () => {
-  it("should render the main container with correct classes", () => {
-    render(<Metrics />);
-    const container = screen.getByLabelText("metrics-container");
-    expect(container).toBeInTheDocument();
+const mockArticle: Article = {
+  title: "Most Viewed Article",
+  views: 1234,
+  author: {
+    id: 1,
+    name: "Jane Doe",
+    createdAt: "2025-04-29",
+    updatedAt: "2025-04-29"
+  },
+  id: 1,
+  content: "test",
+  shares: 23,
+  summary: "test",
+  createdAt: "2025-04-29",
+  updatedAt: "2025-04-29"
+};
+
+describe("Metrics component", () => {
+  it("renders skeleton when isPending is true", () => {
+    render(<Metrics article={null} isPending={true} icon={<Eye />} />);
+    expect(screen.getByLabelText("metrics-skeleton")).toBeInTheDocument();
   });
 
-	it('should match snapshot', () => {
-		const container = render(<Metrics />)
-		expect(container).toMatchSnapshot()
-	})
-
-  it("should render the stats number", () => {
-    render(<Metrics />);
-    expect(screen.getByText(/Article stats number 1/i)).toBeInTheDocument();
-    const statsNumber = screen.getByText(/Article stats number 1/i);
-    expect(statsNumber).toBeInTheDocument();
+  it("renders skeleton when article is null", () => {
+    render(<Metrics article={null} isPending={false} icon={<Eye />} />);
+    expect(screen.getByLabelText("metrics-skeleton")).toBeInTheDocument();
   });
 
-  it("should render the stats description", () => {
-    render(<Metrics />);
-    expect(screen.getByText(/Articles stats here/i)).toBeInTheDocument();
-    const statsDescription = screen.getByText(/Articles stats here/i);
-    expect(statsDescription).toBeInTheDocument();
+  it("renders article data when provided", () => {
+    render(<Metrics article={mockArticle} isPending={false} icon={<Eye />} />);
+    expect(screen.getByLabelText("metrics-container")).toBeInTheDocument();
+    expect(screen.getByLabelText("metrics-title")).toHaveTextContent(
+      "Most Viewed Article",
+    );
+    expect(screen.getByText("by Jane Doe")).toBeInTheDocument();
+    expect(screen.getByText("1234")).toBeInTheDocument();
+  });
+
+  it("matches snapshot with article", () => {
+    const container = render(
+      <Metrics article={mockArticle} isPending={false} icon={<Eye />} />,
+    );
+    expect(container).toMatchSnapshot();
   });
 });

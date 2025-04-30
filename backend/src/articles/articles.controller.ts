@@ -14,9 +14,15 @@ export class ArticlesController {
     return this.articlesService.findAll(params);
   }
 
+  @Get('/stats')
+  async findMostViewedAndSharedArticles(
+    @Query() params: Partial<FindArticlesDto>,
+  ): Promise<StatsResponse> {
+    return this.articlesService.findMostViewedAndSharedArticles(params);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string): Promise<Articles> {
-    console.log(id);
     return this.articlesService.findOne(+id);
   }
 
@@ -30,12 +36,5 @@ export class ArticlesController {
     @Body() params: CreateSummaryDto,
   ): Promise<{ summary: string }> {
     return this.articlesService.createSummary(params);
-  }
-
-  @Get('/stats')
-  async findMostViewedAndSharedArticles(
-    @Query() params: Partial<FindArticlesDto>,
-  ): Promise<StatsResponse> {
-    return this.articlesService.findMostViewedAndSharedArticles(params);
   }
 }
